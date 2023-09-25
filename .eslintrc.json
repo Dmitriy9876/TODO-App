@@ -1,5 +1,12 @@
 {
-    "extends": ["airbnb", "prettier", "plugin:react/recommended"],
-    "plugins": ["react", "jsx-a11y", "import", "react-hooks"],
-    "parser": "babel-eslint"
-  }  
+  "extends": ["airbnb", "prettier", "plugin:react/recommended"],
+  "plugins": ["react", "jsx-a11y", "import", "react-hooks"],
+  "parser": "@babel/eslint-parser",
+  "env": {
+    "browser": true
+  },
+  "rules": {
+    "react/jsx-filename-extension": [1, { "extensions": [".js", ".jsx"] }],
+    "react/react-in-jsx-scope": "off"
+  }
+}

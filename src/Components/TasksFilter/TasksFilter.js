@@ -5,13 +5,13 @@ function TasksFilter({ onFilterChange }) {
   return (
     <ul className="filters">
       <li>
-        <button onClick={() => onFilterChange('All')}>All</button>
+        <button type="button" onClick={() => onFilterChange('All')}>All</button>
       </li>
       <li>
-        <button onClick={() => onFilterChange('Active')}>Active</button>
+        <button type="button" onClick={() => onFilterChange('Active')}>Active</button>
       </li>
       <li>
-        <button onClick={() => onFilterChange('Completed')}>Completed</button>
+        <button type="button" onClick={() => onFilterChange('Completed')}>Completed</button>
       </li>
     </ul>
   );

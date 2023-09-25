@@ -3,33 +3,41 @@ import { Component } from 'react';
 import PropTypes from 'prop-types';
 
 export default class NewTaskForm extends Component {
-
-  state = {
-    description: ''
-};
+  constructor(props) {
+    super(props);
+    this.state = {
+      description: '',
+    };
+  }
 
   onDescriptionChange = (e) => {
+    const { value } = e.target;
     this.setState({
-      description: e.target.value
-    })
+      description: value,
+    });
   }
 
   onSubmit = (e) => {
     e.preventDefault();
-    this.props.onItemAdded(this.state.description)
-    this.setState({ description: '' }); // Очистка поля после отправки
-}
+    const { onItemAdded } = this.props;
+    const { description } = this.state;
+    
+    onItemAdded(description);
+    this.setState({ description: '' });
+  }
 
   render() {
+    const { description } = this.state;
+    
     return (
       <header className="header">
         <h1>Todos</h1>
         <form onSubmit={this.onSubmit}>
-          <input className="new-todo" 
-          placeholder="What needs to be done?" 
-          autoFocus
-          onChange={this.onDescriptionChange}
-          value={this.state.description}
+          <input
+            className="new-todo"
+            placeholder="What needs to be done?"
+            onChange={this.onDescriptionChange}
+            value={description}
           />
         </form>
       </header>

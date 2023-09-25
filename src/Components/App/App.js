@@ -1,45 +1,34 @@
+import { Component } from 'react';
 import NewTaskForm from '../NewTaskForm';
 import TaskList from '../TaskList';
 import Footer from '../Footer';
 import './App.css';
-import { Component } from 'react';
-import PropTypes from 'prop-types';
+
 
 export default class App extends Component {
 
   maxId = 1;
 
-  state = {
-    tasks: [
-      this.createTodoItem('Completed task'),
-      this.createTodoItem('Editing task'),
-      this.createTodoItem('Active task')
-    ],
-    filter: 'All'
-  };
-
-  createTodoItem(text) {
-    return {
-      id: this.maxId++,
-      description: text,
-      created: new Date(),
-      done: false
-    }
+  static handleKeyDown(onToggleDone) {
+    return (e) => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        onToggleDone();
+      }
+    };
   }
 
-  deleteItem = (id) => {
-    this.setState(({ tasks }) => {
-      const idx = tasks.findIndex((el) => el.id === id)
-
-      const newArray = [
-        ...tasks.slice(0, idx),
-        ...tasks.slice(idx + 1)];
-
-        return {
-          tasks: newArray
-        }
-    })
-  };
+  constructor(props) {
+    super(props);
+    this.maxId = 1;
+    this.state = {
+      tasks: [
+        this.createTodoItem('Completed task'),
+        this.createTodoItem('Editing task'),
+        this.createTodoItem('Active task')
+      ],
+      filter: 'All'
+    };
+  }
 
   addItem = (text) => {
     const newItem = this.createTodoItem(text);
@@ -71,6 +60,20 @@ export default class App extends Component {
     }
   )};
 
+  deleteItem = (id) => {
+    this.setState(({ tasks }) => {
+      const idx = tasks.findIndex((el) => el.id === id)
+
+      const newArray = [
+        ...tasks.slice(0, idx),
+        ...tasks.slice(idx + 1)];
+
+        return {
+          tasks: newArray
+        }
+    })
+  };
+
   onFilterChange = (filter) => {
     this.setState({ filter });
   };
@@ -83,11 +86,23 @@ export default class App extends Component {
       };
     });
   };
+
+  createTodoItem(text) {
+    const id = this.maxId;
+    this.maxId += 1;
+    
+    return {
+      id,
+      description: text,
+      created: new Date(),
+      done: false,
+    };
+  }
   
 
   render() {
     const { tasks, filter  } = this.state;
-    const doneCount = tasks.filter((task) => !task.done).length;
+    const doneCount = tasks.filter(({ done }) => !done).length;
 
     const filteredTasks = tasks.filter(task => {
       if (filter === 'All') return true;
@@ -103,7 +118,8 @@ export default class App extends Component {
           <TaskList 
           tasks={ filteredTasks  } 
           onDeleted={ this.deleteItem }
-          onToggleDone={this.onToggleDone}/>
+          onToggleDone={this.onToggleDone}
+          handleKeyDown={App.handleKeyDown}/>
           <Footer count={ doneCount } 
           onFilterChange={this.onFilterChange} 
           clearCompleted={this.clearCompleted}/>
@@ -112,13 +128,3 @@ export default class App extends Component {
     );
   }
 }
-
-App.defaultProps = {
-  tasks: [],
-  filter: 'All',
-};
-
-App.propTypes = {
-  tasks: PropTypes.arrayOf(PropTypes.object),
-  filter: PropTypes.string,
-};
