@@ -6,22 +6,15 @@ import Footer from '../Footer';
 import './App.css';
 
 export default class App extends Component {
-
-  static handleKeyDown(onToggleDone) {
-    return (e) => {
-      if (e.key === 'Enter' || e.key === ' ') {
-        onToggleDone();
-      }
-    };
-  }
-
-  static createTodoItem(text) {
+  static createTodoItem(text, time, pause = false) {
     const id = uuidv4();
     return {
       id,
       description: text,
       created: new Date(),
       done: false,
+      time,
+      pause,
     };
   }
 
@@ -29,65 +22,70 @@ export default class App extends Component {
     super(props);
     this.state = {
       tasks: [
-        App.createTodoItem('Completed task'),
-        App.createTodoItem('Editing task'),
-        App.createTodoItem('Active task')
+        App.createTodoItem('First task', 300, false),
+        App.createTodoItem('Second task', 300, false),
+        App.createTodoItem('Third task', 300, false),
       ],
-      filter: 'All'
+      filter: 'All',
     };
+
+    this.interval = setInterval(() => {
+      this.setState(({ tasks }) => {
+        const updatedTasks = tasks.map(task => {
+          if (task.time > 0 && !task.pause) {
+            return { ...task, time: task.time - 1 };
+          }
+          return task;
+        });
+        return { tasks: updatedTasks };
+      });
+    }, 1000);
   }
 
-  addItem = (text) => {
-    const newItem = App.createTodoItem(text);
-    this.setState(({ tasks }) => {
-      const newArr = [...tasks, newItem];
-      return {
-        tasks: newArr,
-      };
-    });
+  componentWillUnmount() {
+    clearInterval(this.interval);
+  }
+
+  updateTasks = (id, updateFunc) => {
+    this.setState(({ tasks }) => ({
+      tasks: tasks.map(task => (task.id === id ? updateFunc(task) : task))
+    }));
+  };
+
+  addItem = (text, time) => {
+    const newItem = App.createTodoItem(text, time);
+    this.setState(({ tasks }) => ({
+      tasks: [...tasks, newItem]
+    }));
   };
 
   onToggleDone = (id) => {
-    this.setState(({ tasks }) => {
-      const newArray = tasks.map((task) => {
-        if (task.id === id) {
-          return { ...task, done: !task.done };
-        }
-        return task;
-      });
-  
-      return {
-        tasks: newArray,
-      };
-    });
-  };  
+    this.updateTasks(id, task => ({ ...task, done: !task.done }));
+  };
 
   deleteItem = (id) => {
-    this.setState(({ tasks }) => {
-      const newArray = tasks.filter((task) => task.id !== id);
-      return {
-        tasks: newArray,
-      };
-    });
-  };  
+    this.setState(({ tasks }) => ({
+      tasks: tasks.filter(task => task.id !== id)
+    }));
+  };
+
+  toggleTimer = (id) => {
+    this.updateTasks(id, task => ({ ...task, pause: !task.pause }));
+  };
 
   onFilterChange = (filter) => {
     this.setState({ filter });
   };
 
   clearCompleted = () => {
-    this.setState(({ tasks }) => {
-      const filteredTasks = tasks.filter((task) => !task.done);
-      return {
-        tasks: filteredTasks,
-      };
-    });
+    this.setState(({ tasks }) => ({
+      tasks: tasks.filter(task => !task.done)
+    }));
   };
 
   render() {
     const { tasks, filter } = this.state;
     const doneCount = tasks.filter(({ done }) => !done).length;
-
     const filteredTasks = tasks.filter((task) => {
       if (filter === 'All') return true;
       if (filter === 'Active') return !task.done;
@@ -100,10 +98,10 @@ export default class App extends Component {
         <NewTaskForm onItemAdded={this.addItem} />
         <section className="main">
           <TaskList
-            tasks={filteredTasks}
+            filteredTasks={filteredTasks}
             onDeleted={this.deleteItem}
             onToggleDone={this.onToggleDone}
-            handleKeyDown={App.handleKeyDown}
+            onToggleTimer={this.toggleTimer}
           />
           <Footer
             count={doneCount}

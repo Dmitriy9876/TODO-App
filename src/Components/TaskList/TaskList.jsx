@@ -2,20 +2,17 @@ import PropTypes from 'prop-types';
 import Task from '../Task';
 import './TaskList.css';
 
-
-
-function TaskList({ tasks, onDeleted, onToggleDone, handleKeyDown  }) {
+function TaskList({ filteredTasks, onDeleted, onToggleDone, onToggleTimer }) {
   return (
     <ul className="todo-list">
-      {tasks.map(({ id, ...taskProps }) => (
+      {filteredTasks.map(({ id, ...taskProps }) => (
         <li key={id} className='todo-list-item'>
           <Task 
-            description={taskProps.description} 
-            created={taskProps.created} 
-            done={taskProps.done}
+            {...taskProps}
             onDeleted={() => onDeleted(id)}
             onToggleDone={() => onToggleDone(id)}
-            handleKeyDown={handleKeyDown(() => onToggleDone(id))}/>
+            onToggleTimer={() => onToggleTimer(id)}
+          />
         </li>
       ))}
     </ul>
@@ -23,15 +20,15 @@ function TaskList({ tasks, onDeleted, onToggleDone, handleKeyDown  }) {
 }
 
 TaskList.defaultProps = {
-  tasks: [],
+  filteredTasks: [],
   onDeleted: () => {},
   onToggleDone: () => {},
   handleKeyDown: () => {},
 };
 
 TaskList.propTypes = {
-  tasks: PropTypes.arrayOf(PropTypes.shape({
-    id: PropTypes.number.isRequired,
+  filteredTasks: PropTypes.arrayOf(PropTypes.shape({
+    id: PropTypes.string.isRequired,
     description: PropTypes.string.isRequired,
     created: PropTypes.instanceOf(Date).isRequired,
     done: PropTypes.bool.isRequired
