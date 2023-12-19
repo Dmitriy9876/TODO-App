@@ -13,7 +13,6 @@ export default class Task extends Component {
     const { description, done, onToggleDone, onDeleted, time, pause, onToggleTimer } = this.props;
     let taskTime = formatDistanceToNow(this.props.created);
     
-    // Ваш код для изменения отображения времени
     if (taskTime === "less than a minute") {
       taskTime = "less than minute ago";
     } else if (taskTime.includes("minute")) {

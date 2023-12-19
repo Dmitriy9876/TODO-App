@@ -2,7 +2,7 @@ import PropTypes from 'prop-types';
 import Task from '../Task';
 import './TaskList.css';
 
-function TaskList({ filteredTasks, onDeleted, onToggleDone, onToggleTimer }) {
+export default function TaskList({ filteredTasks, onDeleted, onToggleDone, onToggleTimer }) {
   return (
     <ul className="todo-list">
       {filteredTasks.map(({ id, ...taskProps }) => (
@@ -36,6 +36,4 @@ TaskList.propTypes = {
   onDeleted: PropTypes.func,
   onToggleDone: PropTypes.func,
   handleKeyDown: PropTypes.func
-};
-
-export default TaskList;
+}

@@ -6,57 +6,6 @@
     "browser": true
   },
   "rules": {
-    "react/jsx-filename-extension": [1, { "extensions": [".js", ".jsx"] }],
-    "react/react-in-jsx-scope": "off",
-    "react/jsx-filename-extension": [1, { "extensions": [".js", ".jsx"] }],
-      "no-console": "off",
-      "semi": "off",
-      "react/jsx-filename-extension": "off",
-      "quotes": "off",
-      "no-unused-vars": "off",
-      "react/prop-types": "off",
-      "import/no-extraneous-dependencies": "off",
-      "no-underscore-dangle": "off",
-      "jsx-a11y/anchor-is-valid": "off",
-      "jsx-a11y/click-events-have-key-events": "off",
-      "react/jsx-props-no-spreading": "off",
-      "react/jsx-one-expression-per-line": "off",
-      "react-hooks/rules-of-hooks": "off",
-      "react-hooks/exhaustive-deps": "off",
-      "arrow-body-style": "off",
-      "react/jsx-curly-brace-presence": "off",
-      "react/jsx-wrap-multilines": "off",
-      "import/prefer-default-export": "off",
-      "no-restricted-syntax": "off",
-      "prefer-destructuring": "off",
-      "no-param-reassign": "off",
-      "no-alert": "off",
-      "react/no-array-index-key": "off",
-      "react/no-unescaped-entities": "off",
-      "linebreak-style": "off",
-      "no-return-assign": "off",
-      "import/order": "off",
-      "react/state-in-constructor": "off",
-      "react/destructuring-assignment": "off",
-      "react/prefer-stateless-function": "off",
-      "no-undef": "off",
-      "class-methods-use-this": "off",
-      "react/function-component-definition": "off",
-      "react/no-unused-state": "off",
-      "react/sort-comp": [1, {
-        "order": [
-          "static-methods",
-          "lifecycle",
-          "everything-else",
-          "render"
-        ]
-      }],
-      "jsx-a11y/label-has-associated-control": [ 2, {
-        "required": {
-          "some": [ "nesting", "id" ]
-        }
-      }],
-      "jsx-a11y/control-has-associated-label": "off",
-      "react/button-has-type": "off"
+    "react/react-in-jsx-scope": "off"
   }
 }
