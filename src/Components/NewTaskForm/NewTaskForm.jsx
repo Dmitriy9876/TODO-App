@@ -1,36 +1,45 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import PropTypes from 'prop-types';
-import './NewTaskForm.css';
+import './NewTaskForm.scss';
 
 export default class NewTaskForm extends Component {
-  state = {
-    description: '',
-    min: '',
-    sec: '',
-  };
-  
+  static filterInput = (value) => {
+    const numValue = parseInt(value, 10);
+    if (!Number.isNaN(numValue) && numValue >= 0 && numValue <= 59) {
+      return numValue.toString();
+    }
+    return '';
+  }
 
+  constructor(props) {
+    super(props);
+    this.state = {
+      description: '',
+      min: '',
+      sec: '',
+    };
+  }
+  
   onDescriptionChange = (e) => {
     this.setState({ description: e.target.value });
   }
 
-  onChangeMin = (e) => {
-    this.setState({ min: e.target.value });
-  }
+  onChangeMin = ({ target: { value } }) => {
+  this.setState({ min: NewTaskForm.filterInput(value) });
+}
 
-  onChangeSec = (e) => {
-    this.setState({ sec: e.target.value });
+  onChangeSec = ({ target: { value } }) => {
+    this.setState({ sec: NewTaskForm.filterInput(value) });
   }
 
   onSubmit = (e) => {
     e.preventDefault();
-  
     const { description, min, sec } = this.state;
     const { onItemAdded } = this.props;
   
-    const minutes = min ? parseInt(min, 10) : 0;
-    const seconds = sec ? parseInt(sec, 10) : 0;
-    const totalSeconds = (minutes * 60 + seconds) || 300;
+    const minutes = parseInt(min, 10) || 0;
+    const seconds = parseInt(sec, 10) || 0;
+    const totalSeconds = (minutes * 60 + seconds);
   
     if (description) {
       onItemAdded(description, totalSeconds);
@@ -44,24 +53,30 @@ export default class NewTaskForm extends Component {
     return (
       <header className="header">
         <h1>Todos</h1>
-        <form type="submit" onSubmit={this.onSubmit}>
+        <form onSubmit={this.onSubmit}>
           <input
             className="new-todo"
             placeholder="What needs to be done?"
             onChange={this.onDescriptionChange}
             value={description}
           />
-          <input type="text"
-               className="new-todo-form__timer"
-               placeholder="Min"
-               value={min}
-               onChange={this.onChangeMin}
+          <input 
+            type="number"
+            className="new-todo-form__timer"
+            placeholder="Min"
+            value={min}
+            onChange={this.onChangeMin}
+            min="0"
+            max="59"
           />
-          <input type="text"
-               className="new-todo-form__timer"
-               placeholder="Sec"
-               value={sec}
-               onChange={this.onChangeSec}
+          <input 
+            type="number"
+            className="new-todo-form__timer"
+            placeholder="Sec"
+            value={sec}
+            onChange={this.onChangeSec}
+            min="0"
+            max="59"
           />
           <button type="submit" hidden>Add Task</button>
         </form>

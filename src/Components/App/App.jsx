@@ -3,10 +3,10 @@ import { v4 as uuidv4 } from 'uuid';
 import NewTaskForm from '../NewTaskForm';
 import TaskList from '../TaskList';
 import Footer from '../Footer';
-import './App.css';
+import './App.scss';
 
 export default class App extends Component {
-  static createTodoItem(text, time, pause = false) {
+  static createTodoItem(text, time, pause = true, isTimerStarted = false, timerType = 'countdown') {
     const id = uuidv4();
     return {
       id,
@@ -15,6 +15,8 @@ export default class App extends Component {
       done: false,
       time,
       pause,
+      isTimerStarted,
+      timerType
     };
   }
 
@@ -22,9 +24,9 @@ export default class App extends Component {
     super(props);
     this.state = {
       tasks: [
-        App.createTodoItem('First task', 300, false),
-        App.createTodoItem('Second task', 300, false),
-        App.createTodoItem('Third task', 300, false),
+        App.createTodoItem('First task', 300, true),
+        App.createTodoItem('Second task', 300, true),
+        App.createTodoItem('Third task', 300, true),
       ],
       filter: 'All',
     };
@@ -32,8 +34,13 @@ export default class App extends Component {
     this.interval = setInterval(() => {
       this.setState(({ tasks }) => {
         const updatedTasks = tasks.map(task => {
-          if (task.time > 0 && !task.pause) {
-            return { ...task, time: task.time - 1 };
+          if (!task.pause) {
+            if (task.timerType === 'countdown' && task.time > 0) {
+              return { ...task, time: task.time - 1 };
+            }
+            if (task.timerType === 'countup' && task.isTimerStarted) {
+              return { ...task, time: task.time + 1 };
+            }
           }
           return task;
         });
@@ -53,7 +60,9 @@ export default class App extends Component {
   };
 
   addItem = (text, time) => {
-    const newItem = App.createTodoItem(text, time);
+    const isTimerStarted = time === 0;
+    const timerType = time === 0 ? 'countup' : 'countdown';
+    const newItem = App.createTodoItem(text, time, time !== undefined, isTimerStarted, timerType);
     this.setState(({ tasks }) => ({
       tasks: [...tasks, newItem]
     }));
@@ -98,10 +107,10 @@ export default class App extends Component {
         <NewTaskForm onItemAdded={this.addItem} />
         <section className="main">
           <TaskList
-            filteredTasks={filteredTasks}
-            onDeleted={this.deleteItem}
             onToggleDone={this.onToggleDone}
+            onDeleted={this.deleteItem}
             onToggleTimer={this.toggleTimer}
+            filteredTasks={filteredTasks}
           />
           <Footer
             count={doneCount}

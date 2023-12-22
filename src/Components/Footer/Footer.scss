@@ -1,0 +1,53 @@
+$footer-height: 20px;
+$footer-border-color: #e6e6e6;
+$footer-font-size: 15px;
+$footer-color: gray;
+$footer-shadow-color: rgba(0, 0, 0, 0.2);
+
+.footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 15px;
+  height: $footer-height;
+  text-align: center;
+  font-size: $footer-font-size;
+  border-top: 1px solid $footer-border-color;
+  color: $footer-color;
+
+  &:before {
+    content: '';
+    position: absolute;
+    z-index: -1;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    height: 50px;
+    overflow: hidden;
+    box-shadow: 0 1px 1px $footer-shadow-color,
+                0 8px 0 -3px #f6f6f6,
+                0 9px 1px -3px $footer-shadow-color,
+                0 16px 0 -6px #f6f6f6,
+                0 17px 2px -6px $footer-shadow-color;
+  }
+
+  .todo-count {
+    text-align: left;
+
+    strong {
+      font-weight: 300;
+    }
+  }
+
+  .clear-completed,
+  html .clear-completed:active {
+    position: relative;
+    line-height: $footer-height;
+    text-decoration: none;
+    cursor: pointer;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+}

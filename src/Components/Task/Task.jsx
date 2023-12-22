@@ -1,17 +1,19 @@
-import React, { Component } from 'react';
-import './Task.css';
+import { Component } from 'react';
+import './Task.scss';
 import { formatDistanceToNow } from 'date-fns';
+import PropTypes from 'prop-types';
 
 export default class Task extends Component {
   handleKeyPress = (e) => {
+    const { onToggleTimer } = this.props;
     if (e.key === 'Enter' || e.key === ' ') {
-      this.props.onToggleTimer();
+      onToggleTimer();
     }
   };
 
   render() {
-    const { description, done, onToggleDone, onDeleted, time, pause, onToggleTimer } = this.props;
-    let taskTime = formatDistanceToNow(this.props.created);
+    const { onToggleDone, onDeleted, onToggleTimer, description, created, done, time, pause } = this.props;
+    let taskTime = formatDistanceToNow(created);
     
     if (taskTime === "less than a minute") {
       taskTime = "less than minute ago";
@@ -34,25 +36,37 @@ export default class Task extends Component {
           checked={done}
           onChange={onToggleDone}
         />
-        <label>
-          <span className={className} onClick={onToggleDone}
-            role="button"  
-            tabIndex="0">{description}</span>
+        <label htmlFor="toggle">
+          <button 
+            type='button' className={className} onClick={onToggleDone}
+            tabIndex="0">{description}</button>
           <span className="description">
-            <span
+            <button 
+              type='button'
               className={`${pause ? 'icon-play' : 'icon-pause'}`}
               onClick={onToggleTimer}
               onKeyDown={this.handleKeyPress}
-              role="button"
               tabIndex={0}
+              aria-label={pause ? 'Play' : 'Pause'}
             />
             <span className="time">{`${Math.floor(time / 60).toString().padStart(2, '0')}:${(time % 60).toString().padStart(2, '0')}`}</span>
             <span className="created">{taskTime}</span>
           </span>
         </label>
-        <button className="icon icon-edit" />
-        <button className="icon icon-destroy" onClick={onDeleted} />
+        <button type='button' className="icon icon-edit" aria-label="Edit"/>
+        <button type='button' className="icon icon-destroy" onClick={onDeleted} aria-label="Delete"/>
       </div>
     );
   }
 }
+
+Task.propTypes = {
+  description: PropTypes.string.isRequired,
+  done: PropTypes.bool.isRequired,
+  onToggleDone: PropTypes.func.isRequired,
+  onDeleted: PropTypes.func.isRequired,
+  time: PropTypes.number.isRequired,
+  pause: PropTypes.bool.isRequired,
+  onToggleTimer: PropTypes.func.isRequired,
+  created: PropTypes.instanceOf(Date).isRequired
+};
