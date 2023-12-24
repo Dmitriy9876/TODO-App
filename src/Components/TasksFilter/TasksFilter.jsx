@@ -1,56 +1,46 @@
-import React, { Component } from 'react';
+import { useState } from 'react';
 import './TasksFilter.scss';
 import PropTypes from 'prop-types';
 
-export default class TasksFilter extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      activeFilter: 'All'
-    };
-  }
+export default function TasksFilter({ onFilterChange }) {
+  const [activeFilter, setActiveFilter] = useState('All');
 
-  handleFilterChange = (filter) => {
-    const { onFilterChange } = this.props; // Деструктуризация здесь
-    this.setState({ activeFilter: filter });
+  const handleFilterChange = (filter) => {
+    setActiveFilter(filter);
     onFilterChange(filter);
-  }
+  };
 
-  render() {
-    const { activeFilter } = this.state;
-
-    return (
-      <ul className="filters">
-        <li>
-          <button
-            type="button"
-            className={activeFilter === 'All' ? 'active' : ''}
-            onClick={() => this.handleFilterChange('All')}
-          >
-            All
-          </button>
-        </li>
-        <li>
-          <button
-            type="button"
-            className={activeFilter === 'Active' ? 'active' : ''}
-            onClick={() => this.handleFilterChange('Active')}
-          >
-            Active
-          </button>
-        </li>
-        <li>
-          <button
-            type="button"
-            className={activeFilter === 'Completed' ? 'active' : ''}
-            onClick={() => this.handleFilterChange('Completed')}
-          >
-            Completed
-          </button>
-        </li>
-      </ul>
-    );
-  }
+  return (
+    <ul className="filters">
+      <li>
+        <button
+          type="button"
+          className={activeFilter === 'All' ? 'active' : ''}
+          onClick={() => handleFilterChange('All')}
+        >
+          All
+        </button>
+      </li>
+      <li>
+        <button
+          type="button"
+          className={activeFilter === 'Active' ? 'active' : ''}
+          onClick={() => handleFilterChange('Active')}
+        >
+          Active
+        </button>
+      </li>
+      <li>
+        <button
+          type="button"
+          className={activeFilter === 'Completed' ? 'active' : ''}
+          onClick={() => handleFilterChange('Completed')}
+        >
+          Completed
+        </button>
+      </li>
+    </ul>
+  );
 }
 
 TasksFilter.defaultProps = {
@@ -59,4 +49,4 @@ TasksFilter.defaultProps = {
 
 TasksFilter.propTypes = {
   onFilterChange: PropTypes.func
-};
+}

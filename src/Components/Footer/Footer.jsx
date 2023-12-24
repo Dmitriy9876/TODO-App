@@ -22,4 +22,4 @@ Footer.propTypes = {
   count: PropTypes.number,
   onFilterChange: PropTypes.func,
   clearCompleted: PropTypes.func
-};
+}

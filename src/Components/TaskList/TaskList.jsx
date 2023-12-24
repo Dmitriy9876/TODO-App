@@ -42,4 +42,4 @@ TaskList.propTypes = {
   onDeleted: PropTypes.func,
   onToggleDone: PropTypes.func,
   onToggleTimer: PropTypes.func,
-};
+}
