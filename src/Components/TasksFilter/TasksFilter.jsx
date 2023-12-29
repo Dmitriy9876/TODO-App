@@ -2,8 +2,12 @@ import { useState } from 'react';
 import './TasksFilter.scss';
 import PropTypes from 'prop-types';
 
-export default function TasksFilter({ onFilterChange }) {
+export default function TasksFilter({ setFilter }) {
   const [activeFilter, setActiveFilter] = useState('All');
+
+  const onFilterChange = (newFilter) => {
+    setFilter(newFilter);
+  };
 
   const handleFilterChange = (filter) => {
     setActiveFilter(filter);
@@ -44,9 +48,9 @@ export default function TasksFilter({ onFilterChange }) {
 }
 
 TasksFilter.defaultProps = {
-  onFilterChange: () => {}
+  setFilter: () => {}
 };
 
 TasksFilter.propTypes = {
-  onFilterChange: PropTypes.func
+  setFilter: PropTypes.func
 }

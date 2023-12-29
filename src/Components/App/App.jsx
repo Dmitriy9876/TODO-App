@@ -45,59 +45,19 @@ export default function App() {
     return () => clearInterval(interval);
   }, []);
 
-  const updateTasks = (id, updateFunc) => {
-    setTasks((currentTasks) => currentTasks.map(task => (task.id === id ? updateFunc(task) : task)));
-  };
-
-  const addItem = (text, time) => {
-    const isTimerStarted = time === 0;
-    const timerType = time === 0 ? 'countup' : 'countdown';
-    const newItem = createTodoItem(text, time, time !== undefined, isTimerStarted, timerType);
-    setTasks((currentTasks) => [...currentTasks, newItem]);
-  };
-
-  const onToggleDone = (id) => {
-    updateTasks(id, task => ({ ...task, done: !task.done }));
-  };
-
-  const deleteItem = (id) => {
-    setTasks((currentTasks) => currentTasks.filter(task => task.id !== id));
-  };
-
-  const toggleTimer = (id) => {
-    updateTasks(id, task => ({ ...task, pause: !task.pause }));
-  };
-
-  const onFilterChange = (newFilter) => {
-    setFilter(newFilter);
-  };
-
-  const clearCompleted = () => {
-    setTasks((currentTasks) => currentTasks.filter(task => !task.done));
-  };
-
-  const doneCount = tasks.filter(({ done }) => !done).length;
-  const filteredTasks = tasks.filter((task) => {
-    if (filter === 'All') return true;
-    if (filter === 'Active') return !task.done;
-    if (filter === 'Completed') return task.done;
-    return true;
-  });
-
   return (
     <section className="todoapp">
-      <NewTaskForm onItemAdded={addItem} />
+      <NewTaskForm setTasks={setTasks} createTodoItem={createTodoItem} />
       <section className="main">
         <TaskList
-          onToggleDone={onToggleDone}
-          onDeleted={deleteItem}
-          onToggleTimer={toggleTimer}
-          filteredTasks={filteredTasks}
+          tasks={tasks}
+          setTasks={setTasks}
+          filter={filter}
         />
         <Footer
-          count={doneCount}
-          onFilterChange={onFilterChange}
-          clearCompleted={clearCompleted}
+          tasks={tasks}
+          setTasks={setTasks}
+          setFilter={setFilter}
         />
       </section>
     </section>

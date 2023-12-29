@@ -2,10 +2,17 @@ import { useState } from 'react';
 import PropTypes from 'prop-types';
 import './NewTaskForm.scss';
 
-export default function NewTaskForm({ onItemAdded }) {
+export default function NewTaskForm({ setTasks, createTodoItem }) {
   const [description, setDescription] = useState('');
   const [min, setMin] = useState('');
   const [sec, setSec] = useState('');
+
+  const addItem = (text, time) => {
+    const isTimerStarted = time === 0;
+    const timerType = time === 0 ? 'countup' : 'countdown';
+    const newItem = createTodoItem(text, time, time !== undefined, isTimerStarted, timerType);
+    setTasks((currentTasks) => [...currentTasks, newItem]);
+  };
 
   const filterInput = (value) => {
     const numValue = parseInt(value, 10);
@@ -35,7 +42,7 @@ export default function NewTaskForm({ onItemAdded }) {
     const totalSeconds = (minutes * 60 + seconds);
   
     if (description) {
-      onItemAdded(description, totalSeconds);
+      addItem(description, totalSeconds);
       setDescription('');
       setMin('');
       setSec('');
@@ -76,10 +83,7 @@ export default function NewTaskForm({ onItemAdded }) {
   );
 }
 
-NewTaskForm.defaultProps = {
-  onItemAdded: () => {},
-};
-
 NewTaskForm.propTypes = {
-  onItemAdded: PropTypes.func,
+  setTasks: PropTypes.func.isRequired,
+  createTodoItem: PropTypes.func.isRequired,
 }

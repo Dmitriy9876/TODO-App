@@ -1,21 +1,35 @@
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import Task from '../Task';
 import './TaskList.scss';
 
-export default function TaskList({ onToggleDone, onDeleted, onToggleTimer, filteredTasks }) {
+export default function TaskList({ setTasks, filter, tasks }) {
+  const [editingId, setEditingId] = useState(null);
+
+  const filteredTasks = tasks.filter((task) => {
+    if (filter === 'All') return true;
+    if (filter === 'Active') return !task.done;
+    if (filter === 'Completed') return task.done;
+    return true;
+  });
+
   return (
     <ul className="todo-list">
-      {filteredTasks.map(({ id, description, created, done, time, pause }) => (
-        <li key={id} className='todo-list-item'>
+      {filteredTasks.map((task) => (
+        <li key={task.id} className='todo-list-item'>
           <Task
-            time={time}
-            pause={pause}
-            description={description}
-            created={created}
-            done={done}
-            onDeleted={() => onDeleted(id)}
-            onToggleDone={() => onToggleDone(id)}
-            onToggleTimer={() => onToggleTimer(id)}
+            id={task.id}
+            description={task.description}
+            created={task.created}
+            done={task.done}
+            time={task.time}
+            pause={task.pause}
+            isTimerStarted={task.isTimerStarted}
+            timerType={task.timerType}
+            setTasks={setTasks}
+            isEditing={task.id === editingId}
+            startEditing={() => setEditingId(task.id)}
+            stopEditing={() => setEditingId(null)}
           />
         </li>
       ))}
@@ -23,23 +37,17 @@ export default function TaskList({ onToggleDone, onDeleted, onToggleTimer, filte
   );
 }
 
-TaskList.defaultProps = {
-  filteredTasks: [],
-  onDeleted: () => {},
-  onToggleDone: () => {},
-  onToggleTimer: () => {},
-};
-
 TaskList.propTypes = {
-  filteredTasks: PropTypes.arrayOf(PropTypes.shape({
+  filter: PropTypes.oneOf(['All', 'Active', 'Completed']).isRequired,
+  tasks: PropTypes.arrayOf(PropTypes.shape({
     id: PropTypes.string.isRequired,
     description: PropTypes.string.isRequired,
     created: PropTypes.instanceOf(Date).isRequired,
     done: PropTypes.bool.isRequired,
     time: PropTypes.number.isRequired,
-    pause: PropTypes.bool.isRequired
-  })),
-  onDeleted: PropTypes.func,
-  onToggleDone: PropTypes.func,
-  onToggleTimer: PropTypes.func,
+    pause: PropTypes.bool.isRequired,
+    isTimerStarted: PropTypes.bool,
+    timerType: PropTypes.string
+  })).isRequired,
+  setTasks: PropTypes.func.isRequired
 }
