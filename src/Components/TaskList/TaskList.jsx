@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import PropTypes from 'prop-types';
 import Task from '../Task';
 import './TaskList.scss';
@@ -7,7 +7,6 @@ export default function TaskList({ setTasks, filter, tasks }) {
   const [editingId, setEditingId] = useState(null);
 
   const filteredTasks = tasks.filter((task) => {
-    if (filter === 'All') return true;
     if (filter === 'Active') return !task.done;
     if (filter === 'Completed') return task.done;
     return true;
